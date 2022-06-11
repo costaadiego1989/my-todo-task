@@ -1,0 +1,21 @@
+.buttonAddTask {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 5px;
+  background-color:lightpink;
+  padding: 0.35rem;
+  transition: 0.5s;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.buttonAddTask:hover {
+  cursor: pointer;
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  transform: scale(1.2);
+}
