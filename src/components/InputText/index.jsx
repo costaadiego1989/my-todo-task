@@ -1,6 +1,6 @@
 import "./style.css";
 
-export const Input = ({ type, placeholder, onChange, name, value }) => {
+export const Input = ({ type, placeholder, onChange, name, value, id }) => {
   return (
     <>
       <input
@@ -9,6 +9,7 @@ export const Input = ({ type, placeholder, onChange, name, value }) => {
         value={value}
         onChange={onChange}
         name={name}
+        id={id}
       />
     </>
   );

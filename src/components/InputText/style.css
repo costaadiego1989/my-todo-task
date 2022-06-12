@@ -1,0 +1,23 @@
+input[type="text"],
+input[type="date"] {
+  width: 35vw;
+  height: 3rem;
+  padding: 0 0.75rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+input[type="date"] {
+  width: 17vw;
+}

@@ -1,9 +1,8 @@
 .buttonAddTask {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 5px;
-  background-color:indigo;
-  color: white;
+  background-color:lightpink;
   padding: 0.35rem;
   transition: 0.5s;
   -webkit-transform: scale(1);
