@@ -4,7 +4,10 @@ input[type="date"] {
   height: 3rem;
   padding: 0 0.75rem;
   border-radius: 0.35rem;
+  background-color: white;
   border: 1px solid rgba(0, 0, 0, 0.2);
+  color: rgba(0, 0, 0, 0.5);
+  -webkit-text-fill-color: rgba(0, 0, 0, 0.5);;
 }
 
 ::placeholder {

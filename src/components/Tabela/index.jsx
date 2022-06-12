@@ -22,6 +22,7 @@ export const Tabela = () => {
   const [tasks, setTasks] = useState(initialTasks);
   const [error, setError] = useState();
   const [edited, setEdited] = useState(false);
+  const [urlParams, setUrlParams] = useState(url);
 
   const handleClick = () => {
     const datePicker = document.querySelector("#datePicker").value;
@@ -69,7 +70,8 @@ export const Tabela = () => {
   };
 
   const handleEdit = (taskElement) => {
-    console.log(url + taskElement.id);
+    setUrlParams(urlParams + taskElement.id);
+    console.log(urlParams);
     const { value: text } = Swal.fire({
       title: "Tem certeza disso?",
       text: "Você poderá alterar quantas vezes quiser.",
