@@ -2,3 +2,19 @@
     width: 80vw;
     margin: 0 auto;
 }
+
+.containerSearch {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.contentSearch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    width: 100vw;
+    background-color:rgba(0, 0, 0, 0.1);
+}

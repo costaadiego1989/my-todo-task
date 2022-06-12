@@ -1,7 +1,9 @@
 import { createContext, useContext } from "react";
 
-export const tasksListContext = createContext();
+const initialState = [];
 
-export const UseTasksListContext = () => {
-    return useContext(tasksListContext);
+export const createTasksListContext = createContext(initialState);
+
+export const useTasksListContext = () => {
+    return useContext(createTasksListContext);
 }
