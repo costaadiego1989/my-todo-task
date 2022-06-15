@@ -78,8 +78,10 @@ export const Tabela = () => {
         setDeleted(!deleted);
         setError();
         setUrlParams();
+        setUrlParams(window.history.pushState({}, "", `/`));
         Swal.fire("Deletado!", "A tarefa foi deletada com sucesso.", "success");
       } else {
+        setUrlParams(window.history.pushState({}, "", `/`));
         setUrlParams();
       }
     });
@@ -116,8 +118,10 @@ export const Tabela = () => {
         setTaskDate("");
         setEdited(!edited);
         setError();
+        setUrlParams(window.history.pushState({}, "", `/`));
         Swal.fire("Editado!", "A tarefa foi editada com sucesso.", "success");
       } else {
+        setUrlParams(window.history.pushState({}, "", `/`));
         Swal.fire("Cancelado!", "Você cancelou esta operação.", "error");
       }
     });
@@ -181,6 +185,7 @@ export const Tabela = () => {
                         <td>
                           <div className="actionButtons">
                             <a
+                              className="actionButton"
                               role="button"
                               id={task}
                               onClick={() => handleEdit(task)}
@@ -189,6 +194,7 @@ export const Tabela = () => {
                               <BiEdit size={30} color="#FFCF4D" />
                             </a>
                             <a
+                              className="actionButton"
                               role="button"
                               id={task}
                               onClick={() => handleDelete(task)}
