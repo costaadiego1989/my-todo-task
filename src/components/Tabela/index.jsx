@@ -19,7 +19,10 @@ export const Tabela = () => {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState();
   const [edited, setEdited] = useState(false);
+  const [deleted, setDeleted] = useState(false);
   const [urlParams, setUrlParams] = useState();
+
+  let countTasks = 1;
 
   const handleClick = () => {
     const datePicker = document.querySelector("#datePicker").value;
@@ -66,14 +69,16 @@ export const Tabela = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        Swal.fire("Deletado!", "A tarefa foi deletada com sucesso.", "success");
         const filteredTask = api
           .delete(`task/${taskId._id}`)
           .then((response) => setTasks(filteredTask))
           .catch((error) => {
             console.log(error.response);
           });
+        setDeleted(!deleted);
+        setError();
         setUrlParams();
+        Swal.fire("Deletado!", "A tarefa foi deletada com sucesso.", "success");
       } else {
         setUrlParams();
       }
@@ -120,11 +125,13 @@ export const Tabela = () => {
 
   const setInitialDate = (data) => {
     setTasks(data);
-  }
+  };
 
   useEffect(() => {
-    api.get("tasks").then((response) => {setInitialDate(response.data.sucesso)});
-  }, [edited]);
+    api.get("tasks").then((response) => {
+      setInitialDate(response.data.sucesso);
+    });
+  }, [edited, deleted, taskName]);
 
   return (
     <>
@@ -149,7 +156,6 @@ export const Tabela = () => {
         </div>
         <span style={{ marginTop: "0.75rem", color: "red" }}>
           {error ?? error}
-          {/* {test ?? test} */}
         </span>
       </div>
 
@@ -168,8 +174,8 @@ export const Tabela = () => {
               ? tasks.map((task) => {
                   return (
                     <>
-                      <tr key={tasks.length}>
-                        <th scope="row">{tasks.length}</th>
+                      <tr key={task.name}>
+                        <th scope="row">{countTasks++}</th>
                         <td>{task.name}</td>
                         <td>{moment(task.date).format("LL")}</td>
                         <td>
