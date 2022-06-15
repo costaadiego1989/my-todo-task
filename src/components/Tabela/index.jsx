@@ -33,9 +33,7 @@ export const Tabela = () => {
         };
         api
           .post("task", taskData)
-          .then((response) => {
-            console.log(response);
-          })
+          .then((response) => setTasks(response))
           .catch((error) => {
             console.log(error.response);
           });
@@ -69,8 +67,13 @@ export const Tabela = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire("Deletado!", "A tarefa foi deletada com sucesso.", "success");
-        const filteredTask = api.delete(`/task/${urlParams}`);
-        setTasks(filteredTask);
+        const filteredTask = api
+          .delete(`task/${taskId._id}`)
+          .then((response) => setTasks(filteredTask))
+          .catch((error) => {
+            console.log(error.response);
+          });
+        setUrlParams();
       } else {
         setUrlParams();
       }
@@ -78,14 +81,14 @@ export const Tabela = () => {
   };
 
   const handleEdit = (taskElement) => {
-    setUrlParams(urlParams + taskElement.id);
-    console.log(urlParams);
+    setUrlParams(window.history.pushState({}, "", `/${taskElement._id}`));
+    const currentDate = moment().format("YYYY-MM-DD");
     const { value: text } = Swal.fire({
       title: "Tem certeza disso?",
       text: "Você poderá alterar quantas vezes quiser.",
       icon: "warning",
       input: "text",
-      inputValue: taskElement.taskName,
+      inputValue: taskElement.name,
       showCancelButton: true,
       confirmButtonColor: "indigo",
       confirmButtonText: "Alterar",
@@ -93,28 +96,35 @@ export const Tabela = () => {
       cancelButtonText: "Cancelar",
     }).then((result) => {
       if (result.isConfirmed) {
-        const takeInputSwal = document.querySelector(".swal2-input").value;
-        const filteredTasks = tasks.filter(
-          (task) => task.id === taskElement.id
-        );
-        if (filteredTasks && takeInputSwal !== "") {
-          setTaskName((filteredTasks[0].taskName = takeInputSwal));
-          setEdited(true);
-          Swal.fire("Editado!", "A tarefa foi editada com sucesso.", "success");
-        } else {
-          Swal.fire(
-            "Cancelado!",
-            "Você precisa escrever alguma coisa.",
-            "error"
-          );
-        }
+        const valueInput = document.querySelector(".swal2-input").value;
+        const taskData = {
+          taskName: valueInput,
+          taskDate: currentDate,
+        };
+        api
+          .put(`task/${taskElement._id}`, taskData)
+          .then((response) => setTasks(response))
+          .catch((error) => {
+            console.log(error.response);
+          });
+        setTaskName("");
+        setTaskDate("");
+        setEdited(!edited);
+        setError();
+        Swal.fire("Editado!", "A tarefa foi editada com sucesso.", "success");
+      } else {
+        Swal.fire("Cancelado!", "Você cancelou esta operação.", "error");
       }
     });
   };
 
+  const setInitialDate = (data) => {
+    setTasks(data);
+  }
+
   useEffect(() => {
-    api.get("tasks").then((response) => setTasks(response.data.sucesso));
-  }, []);
+    api.get("tasks").then((response) => {setInitialDate(response.data.sucesso)});
+  }, [edited]);
 
   return (
     <>
@@ -154,37 +164,39 @@ export const Tabela = () => {
             </tr>
           </thead>
           <tbody>
-            {tasks.map((task) => {
-              return (
-                <>
-                  <tr key={tasks.length}>
-                    <th scope="row">{tasks.length}</th>
-                    <td>{task.name}</td>
-                    <td>{moment(task.date).format("LL")}</td>
-                    <td>
-                      <div className="actionButtons">
-                        <a
-                          role="button"
-                          id={task}
-                          onClick={() => handleEdit(task)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <BiEdit size={30} color="#FFCF4D" />
-                        </a>
-                        <a
-                          role="button"
-                          id={task}
-                          onClick={() => handleDelete(task)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <RiDeleteBin5Fill size={30} color="#b92323" />
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                </>
-              );
-            })}
+            {tasks.length > 0
+              ? tasks.map((task) => {
+                  return (
+                    <>
+                      <tr key={tasks.length}>
+                        <th scope="row">{tasks.length}</th>
+                        <td>{task.name}</td>
+                        <td>{moment(task.date).format("LL")}</td>
+                        <td>
+                          <div className="actionButtons">
+                            <a
+                              role="button"
+                              id={task}
+                              onClick={() => handleEdit(task)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <BiEdit size={30} color="#FFCF4D" />
+                            </a>
+                            <a
+                              role="button"
+                              id={task}
+                              onClick={() => handleDelete(task)}
+                              style={{ cursor: "pointer" }}
+                            >
+                              <RiDeleteBin5Fill size={30} color="#b92323" />
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </>
+                  );
+                })
+              : null}
           </tbody>
         </table>
       </div>

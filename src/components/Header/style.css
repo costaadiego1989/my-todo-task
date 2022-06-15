@@ -1,31 +1,38 @@
-*, body, html {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-size: 1rem;
-    font-family: Helvetica, Arial, sans-serf;
+*,
+body,
+html {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: Helvetica, Arial, sans-serf;
 }
 
 .containerHeader {
-    width: 100%;
-    background-color:indigo;
-    padding: 2rem;
+  width: 100%;
+  background: rgb(160, 190, 248);
+  background: linear-gradient(
+    0deg,
+    rgba(160, 190, 248, 1) 0%,
+    rgba(181, 240, 240, 1) 56%
+  );
+  padding: 2rem;
 }
 
 .contentHeader {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .contentHeader h2 {
-    font-size: 2.5rem;
-    color: white;
-    padding-bottom: 1rem;
-    font-weight: bold;
+  font-size: 2.5rem;
+  color: #393836;
+  padding-bottom: 1rem;
+  font-weight: bold;
 }
 
 .contentHeader p {
-    font-size: 1.5rem;
-    color: white;
+  font-size: 1.5rem;
+  color: #393836;
 }
