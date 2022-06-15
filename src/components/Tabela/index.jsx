@@ -2,47 +2,53 @@
 import "./style.css";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin5Fill } from "react-icons/ri";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "../InputText";
 import { Button } from "../Button";
 import moment from "moment";
 import "moment-timezone";
 import "moment/locale/pt-br";
 import Swal from "sweetalert2";
+import api from "../../services/tasks.service";
 
 moment.locale("pt-br");
 
 export const Tabela = () => {
-  let initialTasks = [];
-  let url = window.location.href;
-
   const [taskName, setTaskName] = useState("");
-  const [date, setDate] = useState("");
-  const [id, setId] = useState(1);
-  const [tasks, setTasks] = useState(initialTasks);
+  const [taskDate, setTaskDate] = useState("");
+  const [tasks, setTasks] = useState([]);
   const [error, setError] = useState();
   const [edited, setEdited] = useState(false);
-  const [urlParams, setUrlParams] = useState(url);
+  const [urlParams, setUrlParams] = useState();
 
   const handleClick = () => {
     const datePicker = document.querySelector("#datePicker").value;
     const currentDate = moment().format("YYYY-MM-DD");
+    setTaskDate(datePicker);
     try {
       if (taskName && datePicker >= currentDate) {
-        const newTask = {
-          id: id,
+        const taskData = {
           taskName: taskName,
-          date: date,
+          taskDate: taskDate,
         };
+        api
+          .post("task", taskData)
+          .then((response) => {
+            console.log(response);
+          })
+          .catch((error) => {
+            console.log(error.response);
+          });
         setTaskName("");
-        setDate("");
-        setId(id + 1);
+        setTaskDate("");
         setError();
-        const newList = tasks.concat(newTask);
-        setTasks(newList);
-        return newTask;
       } else {
         setError("Não é possível adicionar uma data passada.");
+        const time = setTimeout(() => {
+          setError();
+          return time;
+        }, 2000);
+        clearTimeout(time);
       }
     } catch (error) {
       console.log(error);
@@ -50,10 +56,11 @@ export const Tabela = () => {
   };
 
   const handleDelete = (taskId) => {
+    setUrlParams(window.history.pushState({}, "", `/${taskId._id}`));
     Swal.fire({
       title: "Tem certeza disso?",
       text: "Você irá excluir permanente este item.",
-      icon: "delete",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "indigo",
       confirmButtonText: "Excluir",
@@ -62,9 +69,10 @@ export const Tabela = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire("Deletado!", "A tarefa foi deletada com sucesso.", "success");
-        const filteredTask = tasks.filter((task) => task.id !== taskId);
+        const filteredTask = api.delete(`/task/${urlParams}`);
         setTasks(filteredTask);
-        setId(1);
+      } else {
+        setUrlParams();
       }
     });
   };
@@ -104,28 +112,34 @@ export const Tabela = () => {
     });
   };
 
+  useEffect(() => {
+    api.get("tasks").then((response) => setTasks(response.data.sucesso));
+  }, []);
+
   return (
     <>
       <div className="contentSearch">
         <div className="containerSearch">
           <Input
             type="text"
-            name="tasks"
+            name="taskName"
             placeholder="Digite uma tarefa..."
             value={edited === false ? taskName : null}
             onChange={(e) => setTaskName(e.target.value)}
           />
           <Input
             type="date"
-            name="DataTasks"
-            value={date}
+            name="taskDate"
+            value={taskDate}
             id="datePicker"
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => setTaskDate(e.target.value)}
           />
           <Button text="Adicionar" onClick={handleClick} />
+          {/* <Test functionTest={functionTest} /> */}
         </div>
         <span style={{ marginTop: "0.75rem", color: "red" }}>
           {error ?? error}
+          {/* {test ?? test} */}
         </span>
       </div>
 
@@ -143,9 +157,9 @@ export const Tabela = () => {
             {tasks.map((task) => {
               return (
                 <>
-                  <tr key={task.id}>
-                    <th scope="row">{task.id}</th>
-                    <td>{task.taskName}</td>
+                  <tr key={tasks.length}>
+                    <th scope="row">{tasks.length}</th>
+                    <td>{task.name}</td>
                     <td>{moment(task.date).format("LL")}</td>
                     <td>
                       <div className="actionButtons">
@@ -159,8 +173,8 @@ export const Tabela = () => {
                         </a>
                         <a
                           role="button"
-                          id={task.id}
-                          onClick={() => handleDelete(task.id)}
+                          id={task}
+                          onClick={() => handleDelete(task)}
                           style={{ cursor: "pointer" }}
                         >
                           <RiDeleteBin5Fill size={30} color="#b92323" />
