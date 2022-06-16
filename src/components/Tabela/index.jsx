@@ -4,7 +4,7 @@ import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { useState, useEffect } from "react";
 import { Input } from "../InputText";
-import { Button } from "../Button";
+import { Button } from "../ButtonCreate";
 import moment from "moment";
 import "moment-timezone";
 import "moment/locale/pt-br";
@@ -17,14 +17,13 @@ export const Tabela = () => {
   const [taskName, setTaskName] = useState("");
   const [taskDate, setTaskDate] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [error, setError] = useState();
   const [edited, setEdited] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [urlParams, setUrlParams] = useState();
 
   let countTasks = 1;
 
-  const handleClick = () => {
+  const handleCreate = () => {
     const datePicker = document.querySelector("#datePicker").value;
     const currentDate = moment().format("YYYY-MM-DD");
     setTaskDate(datePicker);
@@ -42,14 +41,13 @@ export const Tabela = () => {
           });
         setTaskName("");
         setTaskDate("");
-        setError();
+        Swal.fire("Criado!", "A tarefa foi criada com sucesso.", "success");
       } else {
-        setError("Não é possível adicionar uma data passada.");
-        const time = setTimeout(() => {
-          setError();
-          return time;
-        }, 2000);
-        clearTimeout(time);
+        Swal.fire(
+          "Erro!",
+          "Não é possível agendar uma tarefa no passado.",
+          "error"
+        );
       }
     } catch (error) {
       console.log(error);
@@ -76,13 +74,10 @@ export const Tabela = () => {
             console.log(error.response);
           });
         setDeleted(!deleted);
-        setError();
-        setUrlParams();
         setUrlParams(window.history.pushState({}, "", `/`));
         Swal.fire("Deletado!", "A tarefa foi deletada com sucesso.", "success");
       } else {
         setUrlParams(window.history.pushState({}, "", `/`));
-        setUrlParams();
       }
     });
   };
@@ -117,7 +112,6 @@ export const Tabela = () => {
         setTaskName("");
         setTaskDate("");
         setEdited(!edited);
-        setError();
         setUrlParams(window.history.pushState({}, "", `/`));
         Swal.fire("Editado!", "A tarefa foi editada com sucesso.", "success");
       } else {
@@ -155,12 +149,8 @@ export const Tabela = () => {
             id="datePicker"
             onChange={(e) => setTaskDate(e.target.value)}
           />
-          <Button text="Adicionar" onClick={handleClick} />
-          {/* <Test functionTest={functionTest} /> */}
+          <Button text="Adicionar" onClick={handleCreate} />
         </div>
-        <span style={{ marginTop: "0.75rem", color: "red" }}>
-          {error ?? error}
-        </span>
       </div>
 
       <div className="containerTable">
@@ -180,7 +170,10 @@ export const Tabela = () => {
                     <>
                       <tr key={task.name}>
                         <th scope="row">{countTasks++}</th>
-                        <td>{task.name}</td>
+                        <td className="taskName">
+                          <Input type="checkbox" />
+                          {task.name}
+                        </td>
                         <td>{moment(task.date).format("LL")}</td>
                         <td>
                           <div className="actionButtons">
