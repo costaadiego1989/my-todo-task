@@ -121,7 +121,7 @@ export const Tabela = () => {
     });
   };
 
-  const setInitialDate = (data) => {
+  const getInitialData = (data) => {
     setTasks(data);
   };
 
@@ -129,14 +129,12 @@ export const Tabela = () => {
     const id = e;
     api
       .put("task", { id: id })
-      .then((response) => console.log(response))
-      .catch((err) => console.log(err));
       setEdited(!edited);
   };
 
   useEffect(() => {
     api.get("tasks").then((response) => {
-      setInitialDate(response.data.sucesso);
+      getInitialData(response.data.sucesso);
     });
   }, [edited, deleted, taskName]);
 
