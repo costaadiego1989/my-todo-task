@@ -125,6 +125,15 @@ export const Tabela = () => {
     setTasks(data);
   };
 
+  const handleCheck = (e) => {
+    const id = e;
+    api
+      .put("task", { id: id })
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err));
+      setEdited(!edited);
+  };
+
   useEffect(() => {
     api.get("tasks").then((response) => {
       setInitialDate(response.data.sucesso);
@@ -171,8 +180,25 @@ export const Tabela = () => {
                       <tr key={task.name}>
                         <th scope="row">{countTasks++}</th>
                         <td className="taskName">
-                          <Input type="checkbox" />
-                          {task.name}
+                          {task.completed === true ? (
+                            <Input
+                              type="checkbox"
+                              value={task._id}
+                              checked
+                              onChange={(e) => handleCheck(e.target.value)}
+                            />
+                          ) : (
+                            <Input
+                              type="checkbox"
+                              value={task._id}
+                              onChange={(e) => handleCheck(e.target.value)}
+                            />
+                          )}
+                          {task.completed === true ? (
+                            <span className="taskCompleted">{task.name}</span>
+                          ) : (
+                            task.name
+                          )}
                         </td>
                         <td>{moment(task.date).format("LL")}</td>
                         <td>

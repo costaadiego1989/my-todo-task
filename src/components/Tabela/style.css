@@ -63,3 +63,7 @@ input[type="checkbox"]:hover {
   flex-direction: row;
   align-items: center;
 }
+
+.taskCompleted {
+  text-decoration: line-through;
+}
