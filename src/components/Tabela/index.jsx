@@ -42,6 +42,12 @@ export const Tabela = () => {
         setTaskName("");
         setTaskDate("");
         Swal.fire("Criado!", "A tarefa foi criada com sucesso.", "success");
+      } else if (!taskName) {
+        Swal.fire(
+          "Erro!",
+          "Você precisa colocar um nome e uma data na sua tarefa.",
+          "error"
+        );
       } else {
         Swal.fire(
           "Erro!",
@@ -127,9 +133,8 @@ export const Tabela = () => {
 
   const handleCheck = (e) => {
     const id = e;
-    api
-      .put("task", { id: id })
-      setEdited(!edited);
+    api.put("task", { id: id });
+    setEdited(!edited);
   };
 
   useEffect(() => {
